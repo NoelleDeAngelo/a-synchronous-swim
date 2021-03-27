@@ -1,7 +1,6 @@
 (function() {
 
   const serverUrl = 'http://127.0.0.1:3000';
-  const backgroundUrl = 'http://127.0.0.1:3000/background.jpg'
 
   //
   // TODO: build the swim command fetcher here
@@ -12,7 +11,7 @@
         SwimTeam.move(response.toLowerCase())
       });
       fetcher();
-    }, 1000);
+    }, 5000);
   };
 
   fetcher();

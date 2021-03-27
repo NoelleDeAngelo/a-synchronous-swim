@@ -25,7 +25,6 @@ module.exports.router = (req, res, next = ()=>{}) => {
     });
     req.on('end', () => {
       let part = multipart.getFile(buffer);
-
       fs.writeFile(path.join('.', 'background.jpg'), part.data, (error) => {
           if (error) {
             console.log(`Error: ${error}`);
@@ -35,19 +34,17 @@ module.exports.router = (req, res, next = ()=>{}) => {
         }
       );
     });
-    let file = undefined;
-    fs.readFile(path.join('.', 'background.jpg'), (err, fileData) => {
-      if (err) {
-        console.log(`Error: ${err}`);
-      } else {
-        var file = multipart.getFile(fileData);
-      }
-    });
-    res.write(buffer);
     res.end();
-  } else {
+  } else if (req.method === 'GET' && req.url === '/') {
+
     res.writeHead(200, headers);
     res.end(queue.dequeue());
+  } else {
+    let readFile = fs.createReadStream(path.join('.', 'background.jpg'))
+    readFile.on('open', () => {
+      res.writeHead(201, headers);
+      readFile.pipe(res);
+    });
   }
 
   next(); // invoke next() at the end of a request to help with testing!

@@ -13,6 +13,8 @@ h3 {
 }
 .background {
   background-image: url(http://127.0.0.1:3000/background.jpg);
+  background-size: cover;
+  background-position: center;
 }
 .team {
   position: absolute;
@@ -39,3 +41,5 @@ h3 {
 .turn-down {
   transform: rotate(270deg);
 }
+
+
