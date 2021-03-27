@@ -12,16 +12,14 @@ module.exports.parse = function(buffer) {
 };
 
 module.exports.getFile = function(buffer) {
-console.log('in')
   var parts = module.exports.parse(buffer);
   for (var part of parts) {
     // return first part with filename and data keys
     if (part.filename && part.data) {
-      console.log(part);
+      // console.log(part);
       return part;
     }
   }
-  console.log('null');
   return null;
 };
 

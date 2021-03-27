@@ -15,25 +15,41 @@ module.exports.initialize = (queue) => {
 };
 
 module.exports.router = (req, res, next = ()=>{}) => {
-  console.log(
-    'Serving request type ' +   req.method + ' for url ' + req.url);
-    let imageFile = null;
+  console.log('Serving request type ' +   req.method + ' for url ' + req.url);
 
   if (req.method === 'POST') {
-    console.log(multipart.getFile(req));
-    req.on('data', function(data) {
-      imageFile = data;
-    })
-    req.on('end', function() {
-      res.writeHead(201, headers);
-      res.end(imageFile);
-    })
-  }
+    var buffer = Buffer.alloc(0);
+    req.on('data', function(postdata) {
+      buffer = Buffer.concat([buffer, Buffer.from(postdata)]);
+    });
+    req.on('end', () => {
+      let part = multipart.getFile(buffer);
 
-  if (req.method === 'GET') {
+      fs.writeFile(path.join('.', 'background.jpg'), part.data, (error) => {
+          if (error) {
+            console.log(`Error: ${error}`);
+          } else {
+            console.log('File successfully written');
+          }
+        }
+      );
+      res.writeHead(201, headers);
+    });
+    let file = undefined;
+    fs.readFile(path.join('.', 'background.jpg'), (err, fileData) => {
+      if (err) {
+        console.log(`Error: ${err}`);
+      } else {
+        var file = multipart.getFile(fileData);
+      }
+    });
+    res.end(file);
+  } else {
     res.writeHead(200, headers);
     res.end(queue.dequeue());
   }
 
   next(); // invoke next() at the end of a request to help with testing!
 };
+
+
