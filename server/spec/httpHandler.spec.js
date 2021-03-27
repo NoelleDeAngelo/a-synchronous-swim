@@ -72,7 +72,7 @@ describe('server responses', () => {
 
   it('should send back the previously saved image', (done) => {
     fs.readFile(postTestFile, (err, fileData) => {
-      httpHandler.backgroundImageFile = path.join('.', 'spec', 'temp.jpg');
+      httpHandler.backgroundImageFile = path.join('.', 'spec', 'water-sm.jpg');
       let post = server.mock(httpHandler.backgroundImageFile, 'POST', fileData);
 
       httpHandler.router(post.req, post.res, () => {

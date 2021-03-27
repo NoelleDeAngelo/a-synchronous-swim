@@ -15,10 +15,11 @@ module.exports.initialize = (queue) => {
 };
 
 module.exports.router = (req, res, next = ()=>{}) => {
-  console.log('Serving request type ' +   req.method + ' for url ' + req.url);
+  //console.log('Serving request type ' +   req.method + ' for url ' + req.url);
 
   if (req.method === 'POST') {
     var buffer = Buffer.alloc(0);
+    res.writeHead(201, headers);
     req.on('data', function(postdata) {
       buffer = Buffer.concat([buffer, Buffer.from(postdata)]);
     });
@@ -33,7 +34,6 @@ module.exports.router = (req, res, next = ()=>{}) => {
           }
         }
       );
-      res.writeHead(201, headers);
     });
     let file = undefined;
     fs.readFile(path.join('.', 'background.jpg'), (err, fileData) => {
@@ -43,7 +43,8 @@ module.exports.router = (req, res, next = ()=>{}) => {
         var file = multipart.getFile(fileData);
       }
     });
-    res.end(file);
+    res.write(buffer);
+    res.end();
   } else {
     res.writeHead(200, headers);
     res.end(queue.dequeue());
